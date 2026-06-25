@@ -5,31 +5,18 @@ on:
     branches:
       - main
 
-  pull_request:
-    types: [opened, synchronize, reopened, closed]
-    branches:
-      - main
-
-
 jobs:
 
-  build_and_deploy_job:
-
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+  deploy:
 
     runs-on: ubuntu-latest
 
-    name: Build and Deploy Job
-
-
     steps:
-
 
       - uses: actions/checkout@v4
 
 
-
-      - name: Build And Deploy
+      - name: Deploy Static Website
 
         uses: Azure/static-web-apps-deploy@v1
 
@@ -37,49 +24,8 @@ jobs:
 
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_CALM_SAND_019623F00 }}
 
-          action: "upload"
-
-
-          # Your website files are in root folder
+          action: upload
 
           app_location: "/"
 
-
-          # No backend
-
-          api_location: ""
-
-
-          # No build output folder
-
-          output_location: ""
-
-
-          # Important for plain HTML/CSS/JS
-
           skip_app_build: true
-
-
-
-  close_pull_request_job:
-
-
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
-
-
-    runs-on: ubuntu-latest
-
-
-    name: Close Pull Request Job
-
-
-    steps:
-
-
-      - name: Close Pull Request
-
-        uses: Azure/static-web-apps-deploy@v1
-
-        with:
-
-          action: "close"
